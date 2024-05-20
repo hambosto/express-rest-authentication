@@ -10,7 +10,7 @@ import router from './router';
 const app = express();
 
 app.use(cors({
-    credentials: true
+    credentials: true,
 }));
 
 app.use(compression());
@@ -31,10 +31,7 @@ if (!MONGO_URL) {
 }
 
 mongoose.Promise = Promise;
-mongoose.connect(MONGO_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-});
+mongoose.connect(MONGO_URL);
 
 mongoose.connection.on('error', (error: Error) => {
     console.error("MongoDB connection error:", error);
