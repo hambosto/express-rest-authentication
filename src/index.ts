@@ -1,7 +1,7 @@
 import express from 'express';
-import mongosee from 'mongoose'
+import mongoose from 'mongoose';
 import http from 'http';
-import bodyParser from 'body-parser'
+import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import compression from 'compression';
 import cors from 'cors';
@@ -25,8 +25,29 @@ server.listen(8080, () => {
 
 const MONGO_URL = process.env['MONGO_URL'];
 
-mongosee.Promise = Promise;
-mongosee.connect(MONGO_URL);
-mongosee.connection.on('error', (error: Error) => console.log(error));
+if (!MONGO_URL) {
+    console.error("MONGO_URL environment variable is required.");
+    process.exit(1);
+}
+
+mongoose.Promise = Promise;
+mongoose.connect(MONGO_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+});
+
+mongoose.connection.on('error', (error: Error) => {
+    console.error("MongoDB connection error:", error);
+});
+
+mongoose.connection.once('open', () => {
+    console.log("Connected to MongoDB successfully");
+});
 
 app.use('/', router());
+
+// Error handling middleware
+app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});
