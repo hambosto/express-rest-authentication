@@ -12,7 +12,7 @@ const UserSchema = new mongoose.Schema({
 
 export const UserModel = mongoose.model("User", UserSchema);
 
-export const getAllUsers = async () => {
+export const getUsers = async () => {
     try {
         return await UserModel.find();
     } catch (error) {
@@ -22,7 +22,7 @@ export const getAllUsers = async () => {
 
 export const getUserByEmail = async (email: string) => {
     try {
-        return await UserModel.findOne({ email });
+        return await UserModel.findOne({ email }).select ('authentication.salt authentication.password');
     } catch (error) {
         throw new Error(`Error getting user by email: ${error}`);
     }

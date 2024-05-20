@@ -14,7 +14,7 @@ export const login = async (req: express.Request, res: express.Response) => {
             });
         }
 
-        const user = await getUsersByEmail(email).select('authentication.salt authentication.password');
+        const user = await getUserByEmail(email);
 
         if (!user) {
             return res.status(400).json({
@@ -65,7 +65,7 @@ export const register = async (req: express.Request, res: express.Response) => {
             });
         }
 
-        const existingUser = await getUsersByEmail(email);
+        const existingUser = await getUserByEmail(email);
         if (existingUser) {
             return res.status(400).json({
                 status: 400,
