@@ -4,8 +4,11 @@ import users from './users';
 
 const router = express.Router();
 
-export default (): express.Router => {
-    authentication(router);
-    users(router);
-    return router;
-};
+// Initialize authentication routes
+authentication(router);
+
+// Initialize user routes
+users(router);
+
+// Export the router
+export default (): express.Router => router;
